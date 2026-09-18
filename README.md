@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PGGC-46 NSS Portal
 
-## Getting Started
+A mobile-first Next.js portal for the National Service Scheme wing of PGGC-46, built with role-based access control, installable PWA behavior, and Vercel-ready configuration.
 
-First, run the development server:
+## Features
+
+- Role-specific dashboards for admin, program officer, leader, and volunteer roles
+- Credentials-based authentication with NextAuth
+- Protected route gating via middleware
+- Event creation and volunteer-facing event feeds
+- Push notification support with web-push
+- Installable PWA shell with manifest and service worker
+
+## Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Prisma + PostgreSQL
+- NextAuth
+- Tailwind CSS
+- next-pwa
+
+## Local development
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- http://localhost:3001
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Demo credentials
 
-## Learn More
+- Admin: admin@pggc46.edu.in / password123
+- Program Officer: po@pggc46.edu.in / password123
+- Leader: leader@pggc46.edu.in / password123
+- Volunteer: volunteer@pggc46.edu.in / password123
 
-To learn more about Next.js, take a look at the following resources:
+## Production notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set the following in Vercel or your hosting environment:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- DATABASE_URL
+- NEXTAUTH_SECRET
+- NEXTAUTH_URL
+- WEB_PUSH_PUBLIC_KEY
+- WEB_PUSH_PRIVATE_KEY
+- NEXT_PUBLIC_APP_URL
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This app is structured for Vercel deployment with the App Router and PWA settings enabled.
