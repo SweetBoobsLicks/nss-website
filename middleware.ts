@@ -1,48 +1,33 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 
-const ROLE_ROUTES: Record<string, string> = {
-  "/admin": "ADMIN",
-  "/po": "PO",
-  "/leader": "LEADER",
-  "/volunteer": "VOLUNTEER",
-};
+import { getRoleFromCookie, isAllowedForRole } from "@/lib/rbac";
 
-export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
   if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api/auth") ||
-    pathname.startsWith("/favicon") ||
+    pathname === "/" ||
     pathname === "/login" ||
-    pathname === "/"
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.includes(".")
   ) {
     return NextResponse.next();
   }
 
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  const segment = pathname.split("/")[1];
+  const protectedSegments = new Set(["admin", "po", "leader", "volunteer"]);
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
-
-  const matchedRoute = Object.entries(ROLE_ROUTES).find(([route]) =>
-    pathname.startsWith(route)
-  );
-
-  if (!matchedRoute) {
+  if (!protectedSegments.has(segment)) {
     return NextResponse.next();
   }
 
-  const requiredRole = matchedRoute[1];
+  const role = getRoleFromCookie(request.cookies.get("app_role")?.value);
 
-  if ((token.role as string) !== requiredRole) {
-    return NextResponse.redirect(new URL("/", req.url));
+  if (role === "PUBLIC" || !isAllowedForRole(pathname, role)) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();

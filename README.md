@@ -1,65 +1,52 @@
 # PGGC-46 NSS Portal
 
-A mobile-first Next.js portal for the National Service Scheme wing of PGGC-46, built with role-based access control, installable PWA behavior, and Vercel-ready configuration.
-
-## Features
-
-- Role-specific dashboards for admin, program officer, leader, and volunteer roles
-- Credentials-based authentication with NextAuth
-- Protected route gating via middleware
-- Event creation and volunteer-facing event feeds
-- Push notification support with web-push
-- Installable PWA shell with manifest and service worker
+A production-ready, mobile-first portal for the NSS Wing of PGGC-46, Sector 46, Chandigarh, built with Next.js App Router, TypeScript, Tailwind, Supabase, and PWA-ready browser notifications.
 
 ## Stack
 
-- Next.js 16
-- React 19
-- TypeScript
-- Prisma + PostgreSQL
-- NextAuth
+- Next.js App Router
+- React + TypeScript
 - Tailwind CSS
-- next-pwa
+- Supabase Auth + PostgreSQL + Storage + Realtime
+- Web Push API
+- Vercel deployment
 
-## Local development with Supabase
+## Roles
+
+- ADMIN
+- PO
+- LEADER
+- VOLUNTEER
+
+## Local setup
 
 1. Create a Supabase project.
-2. Open Project settings -> Database.
-3. Copy the Postgres connection string.
-4. Replace the placeholder values in `.env.local` with your Supabase credentials.
-5. Run:
+2. Add environment variables in `.env.local`.
+3. Install dependencies:
 
 ```bash
 npm install
-npm run db:push
-npm run seed
+```
+
+4. Start the dev server:
+
+```bash
 npm run dev
 ```
 
-Then open:
+5. Open `http://localhost:3001`.
 
-- http://localhost:3001
+## Required env vars
 
-## Demo credentials
+```bash
+NEXT_PUBLIC_SUPABASE_URL="https://<project>.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="<anon-key>"
+NEXT_PUBLIC_APP_URL="http://localhost:3001"
+NEXT_PUBLIC_VAPID_PUBLIC_KEY="<vapid-public-key>"
+VAPID_PRIVATE_KEY="<vapid-private-key>"
+```
 
-- Admin: admin@pggc46.edu.in / password123
-- Program Officer: po@pggc46.edu.in / password123
-- Leader: leader@pggc46.edu.in / password123
-- Volunteer: volunteer@pggc46.edu.in / password123
+## Notes
 
-## Production notes
-
-Set the following in Vercel or your hosting environment:
-
-- DATABASE_URL (Supabase Postgres connection string)
-- NEXTAUTH_SECRET
-- NEXTAUTH_URL
-- WEB_PUSH_PUBLIC_KEY
-- WEB_PUSH_PRIVATE_KEY
-- NEXT_PUBLIC_APP_URL
-
-For Supabase, the `DATABASE_URL` should be the direct Postgres connection string, not the pooled connection string, because Prisma needs a direct connection.
-
-## Deployment
-
-This app is structured for Vercel deployment with the App Router and PWA settings enabled.
+- The app uses Supabase directly and avoids Prisma, Drizzle, and NextAuth.
+- The current project is scaffolded as a production-ready app shell with role-based dashboard routing and push APIs.
